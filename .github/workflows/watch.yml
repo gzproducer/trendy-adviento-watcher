@@ -1,0 +1,38 @@
+name: watch-trendy
+
+on:
+  schedule:
+    - cron: "*/5 * * * *"    # arranca cada ~5 min; cada corrida revisa 1 vez por minuto
+  workflow_dispatch: {}        # boton "Run workflow" para probar a mano
+
+permissions:
+  contents: write              # para guardar trendy_state.json en el repo
+
+concurrency:
+  group: watch-trendy
+  cancel-in-progress: false
+
+jobs:
+  check:
+    runs-on: ubuntu-latest
+    timeout-minutes: 8
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+      - name: Revisar la tienda
+        env:
+          NTFY_TOPIC: ${{ secrets.NTFY_TOPIC }}
+          TELEGRAM_BOT_TOKEN: ${{ secrets.TELEGRAM_BOT_TOKEN }}
+          TELEGRAM_CHAT_ID: ${{ secrets.TELEGRAM_CHAT_ID }}
+        run: python trendy_watcher.py --duration 270 --interval 60
+      - name: Guardar estado si cambio
+        run: |
+          if [ -n "$(git status --porcelain trendy_state.json)" ]; then
+            git config user.name "trendy-bot"
+            git config user.email "trendy-bot@users.noreply.github.com"
+            git add trendy_state.json
+            git commit -m "estado"
+            git push
+          fi
