@@ -9,6 +9,8 @@ algo NUEVO respecto a la primera corrida (la "linea base"):
   2. buscador interno  -> productos nuevos al buscar "adviento"/"calendario"
   3. home              -> enlaces/bloques nuevos con "adviento"
   4. pagina del 2025   -> cambia el texto de /calendario-de-adviento-nick-90s
+  5. home-texto        -> frases nuevas con "adviento"/"calendario" en el texto del home
+  6. terminos          -> enlaces nuevos tipo terminos-calendario-AAAA
 
 Uso:
   python trendy_watcher.py                 # revisa cada 10 min, para siempre
@@ -98,7 +100,24 @@ def sig_page():
     return {"texto-pagina-2025:" + hashlib.sha1(text.encode()).hexdigest()[:12]}
 
 
-SIGNALS = {"sitemap": sig_sitemaps, "buscador": sig_search, "home": sig_home, "pagina-2025": sig_page}
+def sig_home_texto():
+    """Frases del texto visible del home que mencionan adviento/calendario (ej. el pie de pagina)."""
+    text = visible_text(fetch(f"{BASE}/"))
+    return {re.sub(r"\s+", " ", m).strip() for m in re.findall(r".{0,30}(?:adviento|calendario).{0,30}", text, re.I)}
+
+
+def sig_terminos():
+    """Enlaces tipo terminos-calendario-2026 / calendario-2027... en el home y la pagina del 2025."""
+    found = set()
+    for path in ("/", KNOWN_PAGE):
+        found |= set(re.findall(r"terminos-calendario[\w-]*|calendario-(?:de-adviento-)?20\d\d[\w-]*", fetch(BASE + path), re.I))
+    return found
+
+
+SIGNALS = {
+    "sitemap": sig_sitemaps, "buscador": sig_search, "home": sig_home, "pagina-2025": sig_page,
+    "home-texto": sig_home_texto, "terminos": sig_terminos,
+}
 
 
 # ---- notificaciones ----
