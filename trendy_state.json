@@ -2,13 +2,16 @@
  "sitemap": [
   "https://www.maquillajetrendyshop.com/calendario-de-adviento-nick-90s"
  ],
- "buscador": [],
+ "buscador": [
+  "Calendario de Adviento Wonderland – Edición Luxury -> https://www.maquillajetrendyshop.com/calendario-de-adviento-2026-wonderland-b/p"
+ ],
  "home": [
   "2.x:store.custom#calendario-de-adviento",
   "2.x:store.custom#calendario-de-adviento-nick-90s",
   "20adviento",
   "7.x:store.custom#landing-calendario-adviento",
   "adviento",
+  "https://www.maquillajetrendyshop.com/calendario-de-adviento",
   "u002Fcalendario-de-adviento",
   "u002Fcalendario-de-adviento-nick-90s"
  ],
@@ -16,6 +19,7 @@
   "texto-pagina-2025:09f6949ef63e",
   "texto-pagina-2025:3e6b0d59c762",
   "texto-pagina-2025:66c17846c8b6",
+  "texto-pagina-2025:a7206595f997",
   "texto-pagina-2025:f233fd838b37"
  ],
  "home-texto": [
